@@ -1,6 +1,7 @@
-# quikke
+![logo](https://github.com/Teapotka/quikke/assets/101627199/cdec5f80-ed3f-4dfd-bcf3-fd2cf7955c76)
 
 Quikke - take new words by the horns
+
 
 ## Getting Started
 
