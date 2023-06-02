@@ -4,6 +4,7 @@ import 'package:quikke/data/models/word.dart';
 import 'package:sqflite/sqflite.dart';
 
 class WordsDatabase {
+  //INIT
   static final WordsDatabase instance = WordsDatabase._init();
   static Database? _database;
 
@@ -26,9 +27,10 @@ class WordsDatabase {
 
   void _createDB(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE $tableWords(${WordFields.id} INTEGER PRIMARY KEY AUTOINCREMENT, ${WordFields.word} TEXT NOT NULL, ${WordFields.meaning} TEXT NOT NULL, ${WordFields.tag} TEXT NOT NULL, ${WordFields.played} BOOLEAN NOT NULL)");
+        "CREATE TABLE $tableWords(${WordFields.id} INTEGER PRIMARY KEY AUTOINCREMENT, ${WordFields.word} TEXT NOT NULL, ${WordFields.meaning} TEXT NOT NULL, ${WordFields.tag} TEXT NOT NULL, ${WordFields.played} BOOLEAN NOT NULL, ${WordFields.created} TEXT NOT NULL)");
   }
 
+  //CRUD
   void close() async {
     final db = await instance.database;
     db.close();

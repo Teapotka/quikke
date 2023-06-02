@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:quikke/data/models/word.dart';
 import 'package:quikke/db/stats_db.dart';
 import 'package:quikke/db/words_db.dart';
+import 'package:quikke/services/nofication_service.dart';
 
 import 'data/models/stat.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  NotificationService.initialize();
   runApp(MyApp());
 }
 
@@ -47,6 +50,7 @@ class _TestDBState extends State<TestDB> {
                         meaning: "to be intoxicated by love",
                         tag: "#C1",
                         played: false,
+                        created: DateTime.now()
                       ),
                     );
                   },
@@ -67,7 +71,7 @@ class _TestDBState extends State<TestDB> {
                         text = "";
                         words.forEach((word) {
                           text +=
-                              "ID: ${word.id},\nWORD: ${word.word},\nMEANING: ${word.meaning},\nTAG: ${word.tag},\nPLAYED: ${word.played}\n\n";
+                              "ID: ${word.id},\nWORD: ${word.word},\nMEANING: ${word.meaning},\nTAG: ${word.tag},\nPLAYED: ${word.played}\nCREATED: ${word.created}\n\n";
                         });
                       });
                     } catch (e) {
@@ -127,6 +131,17 @@ class _TestDBState extends State<TestDB> {
               ],
             ),
             Text(text2, style: TextStyle(fontSize: 15)),
+            Divider(height: 30),
+            MaterialButton(
+              child: Text("Scheduled"),
+                onPressed: (){
+              NotificationService.showNotification(
+                  title: "New word is ready !",
+                  body: "Improve your knowledge",
+                // scheduled: true,
+                // interval: 5
+              );
+            })
           ],
         ),
       ),

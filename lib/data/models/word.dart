@@ -6,8 +6,9 @@ class WordFields {
   static const String meaning = "meaning";
   static const String tag = "tag";
   static const String played = "played";
+  static const String created = "created";
 
-  static final List<String> values = [id, word, meaning, tag, played];
+  static final List<String> values = [id, word, meaning, tag, played, created];
 }
 
 class Word {
@@ -16,6 +17,7 @@ class Word {
   String meaning;
   String tag;
   bool played;
+  DateTime created;
 
   Word({
     this.id,
@@ -23,6 +25,7 @@ class Word {
     required this.meaning,
     required this.tag,
     required this.played,
+    required this.created,
   });
 
   Map<String, dynamic> toMap() => ({
@@ -31,6 +34,7 @@ class Word {
         WordFields.meaning: meaning,
         WordFields.tag: tag,
         WordFields.played: played ? 1 : 0,
+        WordFields.created: created.toIso8601String(),
       });
 
   factory Word.fromMap(Map<String, dynamic> map) {
@@ -40,6 +44,7 @@ class Word {
       meaning: map[WordFields.meaning] as String,
       tag: map[WordFields.tag] as String,
       played: map[WordFields.played] == 1,
+      created: DateTime.parse(map[WordFields.created] as String),
     );
   }
 
@@ -49,6 +54,7 @@ class Word {
     String? meaning,
     String? tag,
     bool? played,
+    DateTime? created,
   }) =>
       Word(
         id: id ?? this.id,
@@ -56,5 +62,6 @@ class Word {
         meaning: meaning ?? this.meaning,
         tag: tag ?? this.tag,
         played: played ?? this.played,
+        created: created ?? this.created,
       );
 }
