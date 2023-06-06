@@ -2,8 +2,9 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:quikke/data/models/word.dart';
 import 'package:sqflite/sqflite.dart';
+import 'model_db.dart';
 
-class WordsDatabase {
+class WordsDatabase extends ModelDatabase<Word>{
   //INIT
   static final WordsDatabase instance = WordsDatabase._init();
   static Database? _database;
@@ -12,6 +13,7 @@ class WordsDatabase {
 
   WordsDatabase._init();
 
+  @override
   Future<Database> get database async {
     if (_database != null) return _database!;
 
@@ -31,21 +33,26 @@ class WordsDatabase {
   }
 
   //CRUD
+  @override
   void close() async {
     final db = await instance.database;
     db.close();
   }
 
+  @override
   Future<Word> create(Word word) async {
     final db = await instance.database;
     final id = await db.insert(tableWords, word.toMap());
     return word.copy(id: id);
   }
+
+  @override
   Future<void> clearAll() async {
     final db = await instance.database;
     await db.delete(tableWords);
   }
 
+  @override
   Future<Word> read(int id) async {
     final db = await instance.database;
     final maps = await db.query(
@@ -61,6 +68,8 @@ class WordsDatabase {
       throw Exception('not found $id');
     }
   }
+
+  @override
   Future<List<Word>> readAll() async {
     final db = await instance.database;
     final maps = await db.query(

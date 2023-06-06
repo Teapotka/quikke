@@ -1,6 +1,9 @@
 import 'dart:ui';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:quikke/logic/reminder_logic.dart';
+import 'package:quikke/main.dart';
+import 'package:quikke/presentation/screens/test_screen.dart';
 
 class NotificationService {
   static Future<void> initialize() async {
@@ -52,6 +55,7 @@ class NotificationService {
   static Future<void> onNotificationDisplayedMethod(
       ReceivedNotification receivedNotification) async {
     debugPrint('onNotificationDisplayedMethod');
+    TestLogic().createNewTest();
   }
 
   static Future<void> onDismissActionReceivedMethod(

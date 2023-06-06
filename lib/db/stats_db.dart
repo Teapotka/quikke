@@ -1,10 +1,10 @@
 import 'dart:io';
-
 import 'package:path_provider/path_provider.dart';
 import 'package:quikke/data/models/stat.dart';
+import 'package:quikke/db/model_db.dart';
 import 'package:sqflite/sqflite.dart';
 
-class StatsDatabase{
+class StatsDatabase extends ModelDatabase<Stat>{
   static final StatsDatabase instance = StatsDatabase._init();
   static Database? _database;
 
@@ -12,6 +12,7 @@ class StatsDatabase{
 
   StatsDatabase._init();
 
+  @override
   Future<Database> get database async {
     if (_database != null) return _database!;
 
@@ -30,21 +31,26 @@ class StatsDatabase{
         "CREATE TABLE $tableStats(${StatFields.id} INTEGER PRIMARY KEY AUTOINCREMENT, ${StatFields.guesses} INTEGER NOT NULL, ${StatFields.failures} INTEGER NOT NULL, ${StatFields.day} TEXT NOT NULL)");
   }
 
+  @override
   void close() async {
     final db = await instance.database;
     db.close();
   }
 
+  @override
   Future<Stat> create(Stat stat) async {
     final db = await instance.database;
     final id = await db.insert(tableStats, stat.toMap());
     return stat.copy(id: id);
   }
+
+  @override
   Future<void> clearAll() async {
     final db = await instance.database;
     await db.delete(tableStats);
   }
 
+  @override
   Future<Stat> read(int id) async {
     final db = await instance.database;
     final maps = await db.query(
@@ -60,6 +66,8 @@ class StatsDatabase{
       throw Exception('not found $id');
     }
   }
+
+  @override
   Future<List<Stat>> readAll() async {
     final db = await instance.database;
     final maps = await db.query(
