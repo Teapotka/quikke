@@ -74,4 +74,12 @@ class PreferencesService {
   static String getGameTime() {
     return preferences!.getString(PreferencesFields.gameTime) ?? PreferencesDefaultState.gameTime;
   }
+  static Future<void> resetAll() async {
+    Future.wait([
+      preferences!.setInt(PreferencesFields.start, PreferencesDefaultState.start),
+      preferences!.setInt(PreferencesFields.end, PreferencesDefaultState.end),
+      preferences!.setInt(PreferencesFields.frequency, PreferencesDefaultState.frequency),
+      preferences!.setString(PreferencesFields.gameTime, PreferencesDefaultState.gameTime),
+    ]);
+  }
 }

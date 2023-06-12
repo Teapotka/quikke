@@ -28,7 +28,7 @@ class StatsDatabase extends ModelDatabase<Stat>{
 
   void _createDB(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE $tableStats(${StatFields.id} INTEGER PRIMARY KEY AUTOINCREMENT, ${StatFields.guesses} INTEGER NOT NULL, ${StatFields.failures} INTEGER NOT NULL, ${StatFields.day} TEXT NOT NULL)");
+        "CREATE TABLE $tableStats(${StatFields.id} INTEGER PRIMARY KEY AUTOINCREMENT, ${StatFields.result} TEXT NOT NULL, ${StatFields.time} TEXT NOT NULL)");
   }
 
   @override

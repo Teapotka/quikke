@@ -22,8 +22,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     PreferencesService.init().then((_) {
       loadPrefs();
+      print('INIT');
       print(PreferencesService.getGameTime());
-      if(PreferencesService.getGameTime().isNotEmpty){
+      if (PreferencesService.getGameTime().isNotEmpty) {
         Navigator.pushNamed(context, '/test');
       }
     });
@@ -39,58 +40,177 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void setPrefs() {
-    PreferencesService.setFrequency(10);
-    PreferencesService.setRange(start: 0, end: 1);
+    PreferencesService.setFrequency(1);
+    PreferencesService.setRange(start: 9, end: 12);
     loadPrefs();
   }
-
+  final someKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:  Center(
+      body: Center(
         child: Padding(
           padding: EdgeInsets.all(15),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              WordsWidget(),
-              Divider(height: 30),
-              StatsWidget(),
-              Divider(height: 30),
-              MaterialButton(
-                  child: Text("Scheduled"),
-                  onPressed: () {
-                    NotificationService.showNotification(
-                      title: "New word is ready !",
-                      body: "Improve your knowledge",
-                      // scheduled: true,
-                      // interval: 5
-                    );
-                  }),
-              Divider(height: 30),
-              Text(
-                  "RANGE: ${sp_range["start"]}:00 - ${sp_range["end"]}:00\nFREQ: ${sp_freq}"),
-              MaterialButton(
-                  child: Text("Set"),
-                  onPressed: () {
-                    setPrefs();
-                  }),
-              MaterialButton(
-                onPressed: () {
-                  ReminderLogic().createNextReminder();
-                },
-                child: Text('Logic'),
-              ),
-              MaterialButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/test');
-                },
-                child: Text('Test screen'),
-              ),
-            ],
-          ),
+          child: ListView(children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    MaterialButton(
+                      onPressed: () async {
+                        // await clearSP();
+                        await startTest();
+                      },
+                      child: Text(
+                        'start test algoritm',
+                        style: TextStyle(backgroundColor: Colors.blue),
+                      ),
+                    ),
+                    MaterialButton(
+                      onPressed: () async {
+                        // await clearSP();
+                        await WordsDatabase.instance.resetAllStatuses();
+                      },
+                      child: Text(
+                        'reset statuses',
+                        style: TextStyle(backgroundColor: Colors.red),
+                      ),
+                    ),
+                  ],
+                ),
+                // SizedBox(height: 500),
+                WordsWidget(),
+                Divider(height: 30),
+                StatsWidget(),
+                Divider(height: 30),
+                PreferencesWidget(),
+                // MaterialButton(
+                //     child: Text("Scheduled"),
+                //     onPressed: () {
+                //       NotificationService.showNotification(
+                //         title: "New word is ready !",
+                //         body: "Improve your knowledge",
+                //         // scheduled: true,
+                //         // interval: 5
+                //       );
+                //     }),
+                // Divider(height: 30),
+                // Text(
+                //     "RANGE: ${sp_range["start"]}:00 - ${sp_range["end"]}:00\nFREQ: ${sp_freq}"),
+                // MaterialButton(
+                //     child: Text("Set"),
+                //     onPressed: () {
+                //       setPrefs();
+                //     }),
+                // MaterialButton(
+                //   onPressed: () {
+                //     ReminderLogic().createNextReminder();
+                //   },
+                //   child: Text('Logic'),
+                // ),
+                // Divider(
+                //   height: 30,
+                // ),
+                // WordController(),
+                // MaterialButton(
+                //   onPressed: () async {
+                //     await PreferencesService.init();
+                //     print(PreferencesService.getGameTime());
+                //   },
+                //   child: Text("get testTIME"),
+                // ),
+                // MaterialButton(
+                //   onPressed: () async {
+                //     print(await TestLogic().shouldRedirect());
+                //   },
+                //   child: Text("check"),
+                // ),
+                // MaterialButton(
+                //   onPressed: () async {
+                //     print(await TestLogic().checkMissed());
+                //   },
+                //   child: Text("missed"),
+                // ),
+                // MaterialButton(
+                //   onPressed: () async {
+                //     StatsDatabase.instance.create(
+                //       Stat(
+                //         result: Result.failed,
+                //         time: DateTime.now().copyWith(
+                //           day: 6,
+                //           hour: 9,
+                //           minute: 15,
+                //         ),
+                //       ),
+                //     );
+                //   },
+                //   child: Text("add mock result"),
+                // ),
+              ],
+            ),
+          ]),
         ),
       ),
+    );
+  }
+}
+
+
+class PreferencesWidget extends StatefulWidget {
+  const PreferencesWidget({Key? key}) : super(key: key);
+
+  @override
+  State<PreferencesWidget> createState() => _PreferencesWidgetState();
+}
+
+class _PreferencesWidgetState extends State<PreferencesWidget> {
+  String text = "Null";
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text("Shared Prefs"),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // MaterialButton(
+            //   child: Text('add value'),
+            //   onPressed: () {
+            //     WordsDatabase.instance.create(
+            //       Word(
+            //         word: "besotted",
+            //         meaning: "to be intoxicated by love",
+            //         tag: "#C1",
+            //       ),
+            //     );
+            //   },
+            // ),
+            MaterialButton(
+              child: Text('reset all values'),
+              color: Colors.red,
+              onPressed: () async {
+                await clearSP();
+              },
+            ),
+            MaterialButton(
+              child: Text('read all values'),
+              onPressed: () async {
+                final range = PreferencesService.getRange();
+                final frequency = PreferencesService.getFrequency();
+                final gameTime = PreferencesService.getGameTime();
+                setState(() {
+                  text =
+                      'RANGE: ${range["start"]} - ${range["end"]}\nFREQUENCY: $frequency\nGAMETIME: $gameTime';
+                });
+              },
+            ),
+          ],
+        ),
+        Text(text, style: TextStyle(fontSize: 15)),
+      ],
     );
   }
 }
@@ -107,6 +227,7 @@ class _WordsWidgetState extends State<WordsWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Text("Words DB"),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -115,11 +236,12 @@ class _WordsWidgetState extends State<WordsWidget> {
               onPressed: () {
                 WordsDatabase.instance.create(
                   Word(
-                      word: "besotted",
-                      meaning: "to be intoxicated by love",
-                      tag: "#C1",
-                      played: false,
-                      created: DateTime.now()),
+                    word: "besotted",
+                    meaning: "to be intoxicated by love",
+                    tag: "#C1",
+                    // status: Status.played,
+                    // id: 6,
+                  ),
                 );
               },
             ),
@@ -139,7 +261,7 @@ class _WordsWidgetState extends State<WordsWidget> {
                     text = "";
                     words.forEach((word) {
                       text +=
-                          "ID: ${word.id},\nWORD: ${word.word},\nMEANING: ${word.meaning},\nTAG: ${word.tag},\nPLAYED: ${word.played}\nCREATED: ${word.created}\n\n";
+                          "ID: ${word.id},\nWORD: ${word.word},\nMEANING: ${word.meaning},\nTAG: ${word.tag},\nCREATED: ${word.created}\nSTATUS: ${word.status.name}\n\n";
                     });
                   });
                 } catch (e) {
@@ -170,6 +292,7 @@ class _StatsWidgetState extends State<StatsWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Text("Stats DB"),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -177,11 +300,11 @@ class _StatsWidgetState extends State<StatsWidget> {
               child: Text('add value'),
               onPressed: () {
                 StatsDatabase.instance.create(
-                  Stat(
-                    guesses: 1,
-                    failures: 5,
-                    day: DateTime.now(),
-                  ),
+                  Stat(result: Result.failed
+                      // guesses: 1,
+                      // failures: 5,
+                      // day: DateTime.now(),
+                      ),
                 );
               },
             ),
@@ -201,7 +324,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                     text2 = "";
                     stats.forEach((stat) {
                       text2 +=
-                          "ID: ${stat.id},\nGUESSES: ${stat.guesses},\nFAILURES: ${stat.failures},\nDAY: ${stat.day}\n\n";
+                          "ID: ${stat.id},\nRESULT: ${stat.result}\nTIME: ${stat.time}\n\n";
                     });
                   });
                 } catch (e) {
@@ -216,6 +339,80 @@ class _StatsWidgetState extends State<StatsWidget> {
         ),
         Text(text2, style: TextStyle(fontSize: 15)),
       ],
+    );
+  }
+}
+
+class WordController extends StatefulWidget {
+  const WordController({Key? key}) : super(key: key);
+
+  @override
+  State<WordController> createState() => _WordControllerState();
+}
+
+class _WordControllerState extends State<WordController> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController wordController = TextEditingController();
+  final TextEditingController meaningController = TextEditingController();
+  final TextEditingController tagController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 100,
+                child: TextFormField(
+                  decoration: InputDecoration(label: Text('word')),
+                  controller: wordController,
+                ),
+              ),
+              SizedBox(width: 10),
+              SizedBox(
+                width: 100,
+                child: TextFormField(
+                  decoration: InputDecoration(label: Text('meaning')),
+                  controller: meaningController,
+                ),
+              ),
+              SizedBox(width: 10),
+              SizedBox(
+                width: 100,
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    label: Text('tag'),
+                    prefixText: "#",
+                  ),
+                  controller: tagController,
+                ),
+              ),
+            ],
+          ),
+          MaterialButton(
+            child: Text('add word'),
+            onPressed: () {
+              print(
+                'WORD: ${wordController.text} '
+                '| MEANING: ${meaningController.text} '
+                '| TAG: ${tagController.text}',
+              );
+              final word = wordController.text.trim();
+              final meaning = meaningController.text.trim();
+              final tag = '#${tagController.text}'.trim();
+              WordsDatabase.instance.create(Word(
+                word: word,
+                meaning: meaning,
+                tag: tag,
+              ));
+            },
+          ),
+        ],
+      ),
     );
   }
 }

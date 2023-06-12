@@ -4,7 +4,7 @@ import 'package:quikke/data/models/word.dart';
 import 'package:sqflite/sqflite.dart';
 import 'model_db.dart';
 
-class WordsDatabase extends ModelDatabase<Word>{
+class WordsDatabase extends ModelDatabase<Word> {
   //INIT
   static final WordsDatabase instance = WordsDatabase._init();
   static Database? _database;
@@ -29,7 +29,7 @@ class WordsDatabase extends ModelDatabase<Word>{
 
   void _createDB(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE $tableWords(${WordFields.id} INTEGER PRIMARY KEY AUTOINCREMENT, ${WordFields.word} TEXT NOT NULL, ${WordFields.meaning} TEXT NOT NULL, ${WordFields.tag} TEXT NOT NULL, ${WordFields.played} BOOLEAN NOT NULL, ${WordFields.created} TEXT NOT NULL)");
+        "CREATE TABLE $tableWords(${WordFields.id} INTEGER PRIMARY KEY AUTOINCREMENT, ${WordFields.word} TEXT NOT NULL, ${WordFields.meaning} TEXT NOT NULL, ${WordFields.tag} TEXT NOT NULL, ${WordFields.created} TEXT NOT NULL, ${WordFields.status} TEXT NOT NULL)");
   }
 
   //CRUD
@@ -61,10 +61,9 @@ class WordsDatabase extends ModelDatabase<Word>{
       where: '${WordFields.id} = ?',
       whereArgs: [id],
     );
-    if(maps.isNotEmpty){
+    if (maps.isNotEmpty) {
       return Word.fromMap(maps.first);
-    }
-    else{
+    } else {
       throw Exception('not found $id');
     }
   }
@@ -76,15 +75,43 @@ class WordsDatabase extends ModelDatabase<Word>{
       tableWords,
       columns: WordFields.values,
     );
-    if(maps.isNotEmpty){
+    if (maps.isNotEmpty) {
       List<Word> words = [];
       maps.forEach((map) {
         words.add(Word.fromMap(map));
       });
       return words;
-    }
-    else{
+    } else {
       throw Exception('not found');
+    }
+  }
+
+  Future<void> edit(Word word) async {
+    final db = await instance.database;
+    // final value = await read(word.id!);
+    print(word.toMap());
+    // print(value);
+    db.update(
+      tableWords,
+      word.toMap(),
+      where: '${WordFields.id} = ?',
+      whereArgs: [word.id!],
+    );
+  }
+  Future<void> resetAllStatuses() async {
+    final db = await instance.database;
+    final words = await readAll();
+    // print(word.toMap());
+    // print(value);
+    for(var i = 0; i < words.length; i++){
+      db.update(
+        tableWords,
+        words[i].copy(
+          status: Status.pure
+        ).toMap(),
+        where: '${WordFields.id} = ?',
+        whereArgs: [words[i].id!],
+      );
     }
   }
 }
