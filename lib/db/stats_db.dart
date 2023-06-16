@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:quikke/data/models/stat.dart';
 import 'package:quikke/db/model_db.dart';
+import 'package:quikke/services/preferences_service.dart';
 import 'package:sqflite/sqflite.dart';
 
-class StatsDatabase extends ModelDatabase<Stat>{
+class StatsDatabase extends ModelDatabase<Stat> {
   static final StatsDatabase instance = StatsDatabase._init();
   static Database? _database;
 
@@ -28,7 +29,9 @@ class StatsDatabase extends ModelDatabase<Stat>{
 
   void _createDB(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE $tableStats(${StatFields.id} INTEGER PRIMARY KEY AUTOINCREMENT, ${StatFields.result} TEXT NOT NULL, ${StatFields.time} TEXT NOT NULL)");
+        "CREATE TABLE $tableStats(${StatFields
+            .id} INTEGER PRIMARY KEY AUTOINCREMENT, ${StatFields
+            .result} TEXT NOT NULL, ${StatFields.time} TEXT NOT NULL)");
   }
 
   @override
@@ -42,6 +45,32 @@ class StatsDatabase extends ModelDatabase<Stat>{
     final db = await instance.database;
     final id = await db.insert(tableStats, stat.toMap());
     return stat.copy(id: id);
+  }
+
+  Future<List<Stat>> createStatsForDay(DateTime day) async {
+    final db = await instance.database;
+    await PreferencesService.init();
+    final range = PreferencesService.getRange();
+    final start = range["start"]!;
+    final end = range["end"]!;
+    final intervals = [for (var i = start; i <= end; i++) i];
+    final timeIntervals = intervals.map((interval) =>
+        day.copyWith(hour: interval, minute: 0));
+    final statList = timeIntervals.map((interval) => Stat(
+        result: Result.waiting,
+        time: interval
+    )).toList();
+
+    await Future.wait(statList.map((stat) async {
+      await db.insert(tableStats, stat.toMap());
+      print(stat.toMap());
+    }));
+    // await db.insert(tableStats, stat.toMap());
+    print(statList);
+
+    return statList;
+    // final id = await db.insert(tableStats, stat.toMap());
+    // return stat.copy(id: id);
   }
 
   @override
@@ -59,10 +88,10 @@ class StatsDatabase extends ModelDatabase<Stat>{
       where: '${StatFields.id} = ?',
       whereArgs: [id],
     );
-    if(maps.isNotEmpty){
+    if (maps.isNotEmpty) {
       return Stat.fromMap(maps.first);
     }
-    else{
+    else {
       throw Exception('not found $id');
     }
   }
@@ -75,15 +104,28 @@ class StatsDatabase extends ModelDatabase<Stat>{
       columns: StatFields.values,
     );
 
-    if(maps.isNotEmpty){
+    if (maps.isNotEmpty) {
       List<Stat> stats = [];
       maps.forEach((map) {
         stats.add(Stat.fromMap(map));
       });
       return stats;
     }
-    else{
-      throw Exception('not found');
+    else {
+      // throw Exception('not found');
+      return [];
     }
+  }
+  Future<void> edit(Stat stat) async {
+    final db = await instance.database;
+    // final value = await read(word.id!);
+    print(stat.toMap());
+    // print(value);
+    db.update(
+      tableStats,
+      stat.toMap(),
+      where: '${StatFields.id} = ?',
+      whereArgs: [stat.id!],
+    );
   }
 }

@@ -293,49 +293,60 @@ class _StatsWidgetState extends State<StatsWidget> {
     return Column(
       children: [
         Text("Stats DB"),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            MaterialButton(
-              child: Text('add value'),
-              onPressed: () {
-                StatsDatabase.instance.create(
-                  Stat(result: Result.failed
+        Container(
+          child: Column(
+            children: [
+              MaterialButton(
+                child: Text('add value'),
+                onPressed: () {
+                  StatsDatabase.instance.create(
+                    Stat(result: Result.guessed,
+                      time: DateTime(2023, 6, 6, 9, 0),
                       // guesses: 1,
                       // failures: 5,
                       // day: DateTime.now(),
-                      ),
-                );
-              },
-            ),
-            MaterialButton(
-              child: Text('delete all values'),
-              color: Colors.red,
-              onPressed: () {
-                StatsDatabase.instance.clearAll();
-              },
-            ),
-            MaterialButton(
-              child: Text('read all values'),
-              onPressed: () async {
-                try {
-                  final stats = await StatsDatabase.instance.readAll();
-                  setState(() {
-                    text2 = "";
-                    stats.forEach((stat) {
-                      text2 +=
-                          "ID: ${stat.id},\nRESULT: ${stat.result}\nTIME: ${stat.time}\n\n";
-                    });
-                  });
-                } catch (e) {
-                  if ((e as dynamic).message == "not found")
+                    ),
+                  );
+                },
+              ),
+              MaterialButton(
+                child: Text('create for today'),
+                onPressed: () async {
+                  await StatsDatabase.instance.createStatsForDay( DateTime(2023, 6, 6, 10, 03));
+                },
+              ),
+              MaterialButton(
+                child: Text('delete all values'),
+                color: Colors.red,
+                onPressed: () {
+                  StatsDatabase.instance.clearAll();
+                },
+              ),
+              MaterialButton(
+                child: Text('read all values'),
+                onPressed: () async {
+                  try {
+                    final stats = await StatsDatabase.instance.readAll();
                     setState(() {
-                      text2 = "Empty";
+                      text2 = "";
+                      if(stats.isNotEmpty)
+                        stats.forEach((stat) {
+                          text2 +=
+                          "ID: ${stat.id},\nRESULT: ${stat.result}\nTIME: ${stat.time}\n\n";
+                        });
+                      else
+                        text2 = 'Empty';
                     });
-                }
-              },
-            ),
-          ],
+                  } catch (e) {
+                    if ((e as dynamic).message == "not found")
+                      setState(() {
+                        text2 = "Empty";
+                      });
+                  }
+                },
+              ),
+            ],
+          ),
         ),
         Text(text2, style: TextStyle(fontSize: 15)),
       ],

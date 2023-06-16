@@ -10,7 +10,7 @@ class StatFields {
   static final List<String> values = [id, result, time];
 }
 
-enum Result {guessed, failed}
+enum Result {guessed, failed, waiting}
 
 class Stat {
   int? id;
