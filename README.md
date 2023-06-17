@@ -3,13 +3,27 @@
 ### Let's make your learning quikke :tornado:
 
 This repository contains a mobile app developed with Flutter that allows users to learn new words by adding them within the app. The app provides regular reminders to ensure that users don't miss their learning sessions. It includes interactive tests that challenge users to select the correct meaning for a given word from a list of options. Users have the flexibility to customize the intervals and time range of the tests according to their preferences.
+See our design in <a href="https://www.figma.com/file/XDRAtG9MBa7O2k3JQ9zA0I/quikke---solo?type=design&node-id=0%3A1&t=il3ZtWLgDHpYCRjh-1">Figma</a>.
 
 ## Features
 
-1. **Word Management**: Users can easily add and edit words, mark them with tags within the app, creating a personal repository of vocabulary to learn. Also users can also easily find the right word in their vocabulary thanks to the search field, filters and tags.
+1. **Words Management**: Users can easily add and edit words, mark them with tags within the app, creating a personal repository of vocabulary to learn. Also users can also easily find the right word in their vocabulary thanks to the search field, filters and tags.
 2. **Reminder System**: The app sends regular reminders to users, ensuring they don't miss their learning sessions. Reminders are scheduled at an hourly interval, that the user sets up himself.
 3. **Interactive Tests**: Users can assess their word comprehension through interactive tests. Each test presents a word along with four potential meanings. Users must select the correct meaning from the options provided.
 4. **Customizable Test Settings**: Users have the ability to set up intervals and time ranges for the tests, tailoring the learning experience to their preferences.
+
+## Stack
+
+#### Framework & Language
++ Flutter: `3.7.3`
++ Dart: `2.19.2`
+#### Libs:
++ sqflite: `2.2.8+4` - SQLite DB for flutter used to store words and result
++ path_provider: `2.0.15` - is used for getting app location
++ awesome_notifications: `0.7.4+1` - Notification service used to create schedule reminders
++ flutter_launcher_icons: `0.13.1` - is used to set project icons
++ shared_preferences: `2.1.1` - is used to store project settings
++ fl_chart: `0.62.0` - is used to generate charts based on DBs data
 
 ## Installation
 
@@ -26,13 +40,13 @@ This repository contains a mobile app developed with Flutter that allows users t
 
 ## Contributing
 
-Contributions to the Word Learner App are welcome! If you encounter any issues or have suggestions for improvement, please feel free to submit a pull request or open an issue in the repository.
+Contributions to the Quikke are welcome! If you encounter any issues or have suggestions for improvement, please feel free to submit a pull request or open an issue in the repository.
 
 When contributing to this repository, please follow the existing code style and commit message conventions. Also, ensure that you have tested your changes thoroughly before submitting a pull request.
 
 ## License
 
-The Word Learner App is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT). Feel free to modify and distribute the app as per the terms of the license.
+The Quikke is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT). Feel free to modify and distribute the app as per the terms of the license.
 
 ## Acknowledgments
 
@@ -46,25 +60,12 @@ For any inquiries or feedback, please contact us at [tymofii.sukhariev@gmail.com
 
 ## About us
 
-<table align="center">
-  <tr align="center">
-    <td><img height="200" src="https://github.com/Teapotka/quikke/assets/101627199/7eecb291-d08c-4f54-974a-e3846db86543"/></td>
-    <td><img height="200" src="https://github.com/Teapotka/quikke/assets/101627199/9550d34a-9048-4841-9d90-86bf1417c877"/></td>
-  </tr>
-  <tr align="center">
-     <td><b>Tymofii Sukhariev - Full stack developer</b></td>
-    <td><b>Vladyslav Todorchuk - UI/UX developer</b> </td>
-  </tr>
-  <tr align="center">
-    <td>
+Tymofii Sukhariev - Full stack (Frontend) developer 
       <a href="https://www.linkedin.com/in/tymofii-sukhariev-9630a2244/">
       <img src="https://img.shields.io/badge/LinkedIn-grey?logo=linkedin&logoColor=blue" />
       </a>
-    </td>
-    <td>
-      <a href="https://www.behance.net/vladtodorchuk">
+      <br/>
+Vladyslav Todorchuk - UI/UX developer
+ <a href="https://www.behance.net/vladtodorchuk">
       <img src="https://img.shields.io/badge/Behance-grey?logo=behance&logoColor=white" />
       </a>
-    </td>
-  </tr>
-</table>
