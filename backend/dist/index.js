@@ -47,8 +47,9 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
 app.post("/auth/register", auth_1.registerValidator, handleValidationError_1.default, controllers_1.userController.register);
 app.post("/auth/login", auth_1.loginValidator, handleValidationError_1.default, controllers_1.userController.login);
 app.get("/auth/me", checkAuth_1.default, controllers_1.userController.authMe);
-app.get("/tasks/", controllers_1.taskController.getAll);
-app.get("/tasks/tags", controllers_1.taskController.getAllUniqueTags);
+app.get("/tasks/", checkAuth_1.default, controllers_1.taskController.getAllUsersTasks);
+app.get("/tasks/tags", checkAuth_1.default, controllers_1.taskController.getAllUniqueTags);
+app.get("/tasks/filtered/:search?", checkAuth_1.default, controllers_1.taskController.getFilteredUserTasks);
 app.post("/tasks/", checkAuth_1.default, task_1.taskCreationValidator, handleValidationError_1.default, controllers_1.taskController.create);
 app.delete("/tasks/:taskId?", checkAuth_1.default, controllers_1.taskController.remove);
 start();

@@ -1,13 +1,12 @@
-<div class="todo">
+<form [formGroup]="form" class="todo">
     <div class="todo-header">
-        <input class="tag" value="#tag" (input)="control($event)" spellcheck="false">
+        <input class="tag" formControlName="tag"spellcheck="false" maxlength="11">
     </div>
     <div class="todo-row">
-        <div class="bullet">
-            <img src="assets/add.svg" alt="add">
+        <div class="bullet" (click)="done()">
+            <img [src]="current" alt="add">
         </div>
-        <input class="title" value="New Task" (input)="control($event)" spellcheck="false">
+        <input class="title" formControlName="title" spellcheck="false" maxlength="30">
     </div>
-</div>
-
+</form>
 

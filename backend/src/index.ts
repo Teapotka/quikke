@@ -39,8 +39,9 @@ app.post("/auth/register", registerValidator, handleValidationError, userControl
 app.post("/auth/login", loginValidator,handleValidationError ,userController.login)
 app.get("/auth/me", checkAuth , userController.authMe)
 
-app.get("/tasks/", taskController.getAll)
-app.get("/tasks/tags", taskController.getAllUniqueTags)
+app.get("/tasks/", checkAuth, taskController.getAllUsersTasks)
+app.get("/tasks/tags", checkAuth, taskController.getAllUniqueTags)
+app.get("/tasks/filtered/:search?", checkAuth, taskController.getFilteredUserTasks)
 app.post("/tasks/", checkAuth, taskCreationValidator, handleValidationError ,taskController.create)
 app.delete("/tasks/:taskId?", checkAuth, taskController.remove)
 

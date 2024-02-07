@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.remove = exports.create = exports.getAllUniqueTags = exports.getAll = void 0;
+exports.remove = exports.create = exports.getAllUniqueTags = exports.getFilteredUserTasks = exports.getAllUsersTasks = exports.getAll = void 0;
 const task_1 = __importDefault(require("../models/task"));
 const getAll = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -28,10 +28,49 @@ const getAll = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getAll = getAll;
+const getAllUsersTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const tasks = yield task_1.default.find({ user: req.userId });
+        res.json(tasks);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+            res.status(500).json({ message: "Cant get all tasks" });
+        }
+    }
+});
+exports.getAllUsersTasks = getAllUsersTasks;
+const getFilteredUserTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const search = req.query.search;
+        console.log('SEARCH', search);
+        let tasks;
+        if (search.startsWith("#")) {
+            tasks = yield task_1.default.find({ user: req.userId, tag: search });
+            console.log("tags", tasks);
+        }
+        else {
+            tasks = yield task_1.default.find({
+                user: req.userId,
+                title: { $regex: search, $options: "i" },
+            });
+            console.log("title", tasks);
+        }
+        res.json(tasks);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+            res.status(500).json({ message: "Cant get all tasks" });
+        }
+    }
+});
+exports.getFilteredUserTasks = getFilteredUserTasks;
 const getAllUniqueTags = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("hello");
-        const tasks = yield task_1.default.distinct('tag');
+        console.log("tag", req.userId);
+        const tasks = yield task_1.default.find({ user: req.userId }).distinct("tag");
         res.json(tasks);
     }
     catch (error) {

@@ -1,12 +1,12 @@
 <div class="todo">
     <div class="todo-header">
         <div class="tag">
-            #tag
+            {{tag || ""}}
         </div>
     </div>
     <div class="todo-row">
-        <div class="bullet">
-            <img src="assets/unselected.svg" alt="unselected">
+        <div class="bullet" (click)="done()">
+            <img [src]="current" alt="unselected">
         </div>
         <div class="title">{{title}}</div>
     </div>

@@ -1,10 +1,10 @@
 import {body} from 'express-validator'
 
 export const registerValidator = [
-    body('name', 'minimum 5 characters').isLength({min: 5}),
-    body('password', 'minimum 5 characters').isLength({min: 5}),
+    body('name', 'name should be from 5 to 25 characters long').isLength({min: 5, max: 25}),
+    body('password', 'password should be from 5 to 25 characters long').isLength({min: 5, max: 25}),
 ]
 export const loginValidator = [
-    body('name', 'minimum 5 characters').isLength({min: 5}),
-    body('password', 'minimum 5 characters').isLength({min: 5}),
+    body('name', 'name should be from 5 to 25 characters long').isLength({min: 5, max: 25}),
+    body('password', 'password should be from 5 to 25 characters long').isLength({min: 5, max: 25}),
 ]

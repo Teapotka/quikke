@@ -1,15 +1,9 @@
-@import '../../styles/colors'
-    
-.container
-    display: flex
-    flex-direction: column
-    align-items: center
-.logo-container
-    margin: 50px 0
+@import '../../../styles/colors'
+ 
 .search-container
     display: flex
-    width: 80%
-    max-width: 500px
+    width: 100%
+    // max-width: 500px
     gap: 10px
 .search-field
     display: flex
@@ -35,15 +29,15 @@
 .tag-container
     margin-top: 10px 
     display: flex
-    width: 80%
-    max-width: 500px
+    width: 100%
+    // max-width: 500px
     flex-wrap: wrap
     align-items: center
     justify-content: center
     column-gap: 10px
     row-gap: 10px
 
-.tag
+.hash
     border: 2px solid $main-color
     border-radius: 20px
     padding: 5px 10px
@@ -51,6 +45,14 @@
 .active
     background-color: $main-color
     color: $first-color
+.tapped svg path
+    &:nth-child(1)
+        stroke: $main-color
+    &:nth-child(2)
+        fill: $main-color
+        
+    // stroke: $main-color
+    // fill: $main-color
 
 .todo-create-container
     display: flex
@@ -64,9 +66,4 @@
     margin-top: 20px
     gap: 20px
     justify-content: center
-
-app-todo-header
-    display: flex
-    width: 80%   
-    max-width: 500px
-    flex-direction: column
+    // align-content: flex-start
