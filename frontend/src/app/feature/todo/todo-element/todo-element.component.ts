@@ -1,30 +1,31 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ApiService } from 'src/app/core/services/api.service';
 
 @Component({
   selector: 'app-todo-element',
   templateUrl: './todo-element.component.html',
-  styleUrls: ['./todo-element.component.sass']
+  styleUrls: ['./todo-element.component.sass'],
+  providers: [
+    ApiService
+  ]
 })
 export class TodoElementComponent {
   @Input() title: string = ''
-  @Input() tag: string = ''
+  @Input() tag?: string = ''
   @Input() id: string = ''
 
-  @Output() notificate = new EventEmitter<any>();
+  @Output() notificate = new EventEmitter();
 
   current = 'assets/unselected.svg'
   selected = 'assets/selected.svg'
 
   constructor(
-    private http: HttpClient
+    private api: ApiService
   ){}
 
   done(){
     this.current = this.selected
-    console.log(this.id)
-    this.http.delete(`http://localhost:3000/tasks?taskId=${this.id}`).subscribe((data)=>{
-      console.log(data)
+    this.api.deleteTask(this.id).subscribe((data)=>{
       this.notificate.emit()
     })
   }

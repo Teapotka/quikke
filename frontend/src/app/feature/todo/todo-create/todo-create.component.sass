@@ -1,0 +1,39 @@
+@import '../../../../styles/'
+    
+.todo
+    @include fxColumn(stretch,center)
+    height: auto
+    width: 200px
+    border: border($main-color)
+    border-radius: $border-radius
+    padding: 0 10px 30px 10px
+    &-header
+        @include fxRow(end,center)
+        width: 100%
+    &-row
+        @include fxRow(start, center)
+        width: 100%        
+        gap: 10px
+    
+.bullet
+    display: flex
+
+@mixin modified-input($text-color, $text-size)
+    display: flex
+    border: none
+    background-color: $base-color
+    color: $text-color
+    font-size: $text-size
+    font-weight: $font-weight
+    &:focus
+        outline: none 
+
+.title
+    @include modified-input($first-color, $text-sm)
+    width: 140px
+
+.tag
+    @include modified-input($second-color, $text-xs)
+    width: 130px
+    text-align: end
+    padding: 10px 10px 5px 0

@@ -18,12 +18,12 @@ const sign = (user: UserDocument) => {
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { name, password } = req.body
+    const { login, password } = req.body
     const salt = await bcrypt.genSalt(10)
     const passwordHash = await bcrypt.hash(password, salt)
 
     const doc = new userModel({
-      name: name,
+      login: login,
       passwordHash: passwordHash,
     })
 
@@ -42,16 +42,14 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { name, password } = req.body
-    const user = await userModel.findOne({ name })
+    const { login, password } = req.body
+    const user = await userModel.findOne({ login })
 
     if (!user) {
       return res.status(404).json({ message: "User not found" })
     }
 
     const isValid = await bcrypt.compare(password, user._doc.passwordHash)
-
-    console.log(isValid)
 
     if (!isValid) {
       return res.status(400).json({ message: "Wrong data" })
@@ -74,7 +72,6 @@ export const authMe = async (req: AuthenticatedRequest, res: Response)=> {
         const user = await userModel.findById(req.userId)
         if(!user)
         {
-            console.log('here')
             return res.status(404).json({message: 'User is not found'})
         }
         const userInfo = user._doc

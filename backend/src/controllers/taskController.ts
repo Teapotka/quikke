@@ -4,7 +4,6 @@ import { AuthenticatedRequest } from "../utils/checkAuth"
 
 export const getAll = async (req: Request, res: Response) => {
   try {
-    console.log("hello")
     const tasks = await taskModel.find()
 
     res.json(tasks)
@@ -38,17 +37,14 @@ export const getFilteredUserTasks = async (
 ) => {
   try {
     const search: string = req.query.search as string
-    console.log('SEARCH', search)
     let tasks: any
     if (search.startsWith("#")) {
       tasks = await taskModel.find({ user: req.userId, tag: search })
-      console.log("tags", tasks)
     } else {
       tasks = await taskModel.find({
         user: req.userId,
         title: { $regex: search, $options: "i" },
       })
-      console.log("title", tasks)
     }
     res.json(tasks)
   } catch (error) {
@@ -64,7 +60,6 @@ export const getAllUniqueTags = async (
   res: Response
 ) => {
   try {
-    console.log("tag", req.userId)
     const tasks = await taskModel.find({ user: req.userId }).distinct("tag")
 
     res.json(tasks)
@@ -97,7 +92,6 @@ export const create = async (req: AuthenticatedRequest, res: Response) => {
 export const remove = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const taskId = req.query.taskId
-    console.log(taskId)
     await taskModel.findByIdAndDelete(taskId)
     res.status(200).json(taskId)
   } catch (error) {

@@ -1,0 +1,59 @@
+@import '../../../styles/'
+    
+.container
+    @include fxColumn(start,center)
+
+.logo-container
+    margin: 50px 0
+
+.form-container
+    @include fxContainer
+    flex-direction: column
+    gap: 35px
+
+.field-container
+    @include fxColumn(start,start)
+    gap: 10px
+
+.label
+    font-size: $text-lg
+
+.field
+    height: 60px
+    width: 100%
+    border-radius: $border-radius
+    background-color: $base-color
+    color: $first-color
+    font-size: $text-lg
+    padding: 0 20px
+    font-weight: $font-weight
+    border: border($main-color)
+    &:focus
+        outline: none 
+
+.hint
+    color: $second-color
+    font-size: $text-xs
+
+.button-row
+    display: flex
+    gap: 25px
+
+.button
+    @include fxCenter
+    width: 50%
+    height: 60px
+    border-radius: $border-radius
+    font-size: $text-lg
+    border: none
+    background-color: $base-color
+    color: $first-color
+    font-weight: bold
+    &-register
+        border: border($main-color)
+    &-login
+        background-color: $main-color
+        color: $base-color
+    &:focus
+        outline: none 
+    

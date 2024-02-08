@@ -16,7 +16,6 @@ exports.remove = exports.create = exports.getAllUniqueTags = exports.getFiltered
 const task_1 = __importDefault(require("../models/task"));
 const getAll = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("hello");
         const tasks = yield task_1.default.find();
         res.json(tasks);
     }
@@ -44,18 +43,15 @@ exports.getAllUsersTasks = getAllUsersTasks;
 const getFilteredUserTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const search = req.query.search;
-        console.log('SEARCH', search);
         let tasks;
         if (search.startsWith("#")) {
             tasks = yield task_1.default.find({ user: req.userId, tag: search });
-            console.log("tags", tasks);
         }
         else {
             tasks = yield task_1.default.find({
                 user: req.userId,
                 title: { $regex: search, $options: "i" },
             });
-            console.log("title", tasks);
         }
         res.json(tasks);
     }
@@ -69,7 +65,6 @@ const getFilteredUserTasks = (req, res) => __awaiter(void 0, void 0, void 0, fun
 exports.getFilteredUserTasks = getFilteredUserTasks;
 const getAllUniqueTags = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("tag", req.userId);
         const tasks = yield task_1.default.find({ user: req.userId }).distinct("tag");
         res.json(tasks);
     }
@@ -102,7 +97,6 @@ exports.create = create;
 const remove = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const taskId = req.query.taskId;
-        console.log(taskId);
         yield task_1.default.findByIdAndDelete(taskId);
         res.status(200).json(taskId);
     }

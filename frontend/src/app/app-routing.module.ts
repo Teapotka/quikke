@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthComponent } from './auth/auth.component';
-import { TodoComponent } from './todo/todo.component';
+import { AuthComponent } from './feature/auth/auth.component';
+import { TodoComponent } from './feature/todo/todo.component';
 
 const routes: Routes = [
   {path: 'auth', component: AuthComponent},

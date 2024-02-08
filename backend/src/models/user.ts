@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 
 export interface TUser {
-  name: {
+  login: {
     type: String
     unique: Boolean
     required: Boolean
@@ -19,7 +19,7 @@ export interface UserDocument extends TUser, mongoose.Document {
 }
 
 const userSchema = new mongoose.Schema<UserDocument>({
-  name: {
+  login: {
     type: String,
     unique: true,
     required: true,

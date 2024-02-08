@@ -1,29 +1,34 @@
 <div class="container">
+    <!-- Logo -->
     <div class="logo-container">
         <img src="assets/logo.svg" alt="logo">
     </div>
-    <form class="form-container" [formGroup]="form" (submit)="onSubmit($event)">
+    <!-- Auth form -->
+    <form class="form-container" [formGroup]="form" (ngSubmit)="onSubmit($event)">
+        <!-- Login -->
         <div class="field-container">
             <span class="label">Login</span>
             <input class="field" type="text" formControlName="login" spellcheck="false">
             <div *ngIf="login.errors && (login.dirty || login.touched)" class="hint">
-                <div *ngIf="login.errors['required']">Login is required.</div>
-                <div *ngIf="login.errors['minlength']">Login must be at least 5 characters long.</div>
-                <div *ngIf="login.errors['maxlength']">Login cannot be more than 25 characters long.</div>
+                <div *ngIf="login.errors['required']">{{formErrorMessages.required}}</div>
+                <div *ngIf="login.errors['minlength']">{{formErrorMessages.minlength}}</div>
+                <div *ngIf="login.errors['maxlength']">{{formErrorMessages.maxlength}}</div>
             </div>
             <div *ngIf="loginError" class="hint">{{ loginError }}</div>
         </div>
+        <!-- Password -->
         <div class="field-container">
             <span class="label">Password</span>
             <input class="field" type="text" formControlName="password" spellcheck="false">
             <div *ngIf="password.errors && (password.dirty || password.touched)" class="hint">
-                <div *ngIf="password.errors['required']">Password is required.</div>
-                <div *ngIf="password.errors['minlength']">Password must be at least 5 characters long.</div>
-                <div *ngIf="password.errors['maxlength']">Password cannot be more than 25 characters long.</div>
+                <div *ngIf="password.errors['required']">{{formErrorMessages.required}}</div>
+                <div *ngIf="password.errors['minlength']">{{formErrorMessages.minlength}}</div>
+                <div *ngIf="password.errors['maxlength']">{{formErrorMessages.maxlength}}</div>
             </div>
         </div>
+        <!-- Submit buttons -->
         <div class="button-row">
-            <button class="button button-signup" type="submit" id="signup">Sign up</button>
+            <button class="button button-register" type="submit" id="register">Sign up</button>
             <button class="button button-login" type="submit" id="login">Login</button>
         </div>
     </form>

@@ -1,19 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
+import { ApiService } from 'src/app/core/services/api.service';
+import { TTaskPayload } from 'src/app/core/services/api.typing';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-todo-create',
   templateUrl: './todo-create.component.html',
-  styleUrls: ['./todo-create.component.sass']
+  styleUrls: ['./todo-create.component.sass'],
+  providers: [
+    ApiService
+  ]
 })
 export class TodoCreateComponent implements OnInit {
   
-  @Output() notificate = new EventEmitter<any>();
-
-  current = 'assets/add.svg'
-  selected = 'assets/selected.svg'
-  unselected = 'assets/add.svg'
+  @Output() notificate = new EventEmitter();
 
   get title(): FormControl {
     return this.form.get("title") as FormControl
@@ -26,14 +28,14 @@ export class TodoCreateComponent implements OnInit {
 
   constructor(
     private fb: NonNullableFormBuilder,
-    private http: HttpClient,
+    private api: ApiService,
   ) {}
 
   ngOnInit(): void {
     this.buildForm()
   }
 
-  buildForm() {
+  buildForm(): void {
     this.form = this.fb.group({
       title: this.fb.control("New Task", [
         Validators.required,
@@ -47,26 +49,26 @@ export class TodoCreateComponent implements OnInit {
       this.updateTagControl(value);
     });
   }
+
   updateTagControl(value: string) {
     let newValue =  `#${value.toLowerCase().replaceAll('#', '')}`
     this.tag.setValue(newValue, { emitEvent: false });
   }
 
   done(){
-    this.current = this.selected
-    const requestBody: {title: string, tag?: string} = {
-      title: this.title.value.trim()
+    if(this.form.valid){
+      const requestBody: TTaskPayload = {
+        title: this.title.value.trim()
+      }
+      const tag = `#${this.tag.value.replace('#', '').trim()}`
+  
+      if(this.tag.value != "#"){
+        requestBody["tag"] = tag
+      }
+      this.form.reset()
+      this.api.createTask(requestBody).subscribe((data)=>{
+        this.notificate.emit()
+      })
     }
-    const tag = `#${this.tag.value.replace('#', '').trim()}`
-    console.log(tag)
-
-    if(this.tag.value != "#"){
-      requestBody["tag"] = tag
-    }
-    this.http.post('http://localhost:3000/tasks', requestBody).subscribe(console.log)
-    this.form.reset()
-    this.current = this.unselected
-    this.notificate.emit()
   }
-    
 }

@@ -25,11 +25,11 @@ const sign = (user) => {
 };
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, password } = req.body;
+        const { login, password } = req.body;
         const salt = yield bcrypt_1.default.genSalt(10);
         const passwordHash = yield bcrypt_1.default.hash(password, salt);
         const doc = new user_1.default({
-            name: name,
+            login: login,
             passwordHash: passwordHash,
         });
         const user = yield doc.save();
@@ -46,13 +46,12 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.register = register;
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, password } = req.body;
-        const user = yield user_1.default.findOne({ name });
+        const { login, password } = req.body;
+        const user = yield user_1.default.findOne({ login });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
         const isValid = yield bcrypt_1.default.compare(password, user._doc.passwordHash);
-        console.log(isValid);
         if (!isValid) {
             return res.status(400).json({ message: "Wrong data" });
         }
@@ -72,7 +71,6 @@ const authMe = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield user_1.default.findById(req.userId);
         if (!user) {
-            console.log('here');
             return res.status(404).json({ message: 'User is not found' });
         }
         const userInfo = user._doc;
